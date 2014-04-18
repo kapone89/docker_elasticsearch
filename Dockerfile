@@ -15,10 +15,12 @@ RUN wget --no-check-certificate -q https://download.elasticsearch.org/elasticsea
 RUN dpkg -i elasticsearch-0.90.13.deb
 RUN rm elasticsearch-0.90.13.deb
 
-# configure ES init script to run in the foreground (I don't like this, but the start script does lots of useful config/setup)
+# configure init script to run in the foreground (I don't like this, but the start script does lots of useful config/setup)
 RUN sed -i.bak 's/--start -b/--start/' /etc/init.d/elasticsearch
 RUN sed -i.bak 's/^DAEMON_OPTS="/DAEMON_OPTS="-f /' /etc/init.d/elasticsearch
 
+VOLUME ["/var/lib/elasticsearch", "/var/log/elasticsearch"]
 EXPOSE 9200 9300
 
-CMD "service elasticsearch start"
+ADD start.sh /usr/local/bin/start.sh
+CMD /usr/local/bin/start.sh
