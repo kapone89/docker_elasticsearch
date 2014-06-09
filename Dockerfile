@@ -6,6 +6,9 @@ RUN wget --no-check-certificate -q https://download.elasticsearch.org/elasticsea
 RUN dpkg -i elasticsearch-0.90.13.deb
 RUN rm elasticsearch-0.90.13.deb
 
+# add marvel for monitoring
+RUN /usr/share/elasticsearch/bin/plugin -i elasticsearch/marvel/latest
+
 # configure init script to run in the foreground (I don't like this, but the start script does lots of useful config/setup)
 RUN sed -i.bak 's/--start -b/--start/' /etc/init.d/elasticsearch
 RUN sed -i.bak 's/^DAEMON_OPTS="/DAEMON_OPTS="-f /' /etc/init.d/elasticsearch
